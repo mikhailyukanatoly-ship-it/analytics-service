@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "outDir": "../dist/migrations"
+  },
+  "include": ["*.ts"],
+  "exclude": ["js"]
+}

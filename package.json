@@ -1,0 +1,152 @@
+{
+  "name": "analytics-service",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Anatolii Mikhailyuk",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "pnpm migration:compile && nest build",
+    "postbuild": "cp -r migrations dist/",
+    "start": "pnpm migration:compile && nest start",
+    "start:dev": "pnpm migration:compile && nest start --watch",
+    "start:debug": "pnpm migration:compile && nest start --debug --watch",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint:fix": "eslint \"src/**/*.{js,ts}\" --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "jest",
+    "test:unit": "jest --selectProjects unit",
+    "test:integration": "jest --selectProjects integration",
+    "test:e2e": "jest --selectProjects e2e",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "typeorm:config": "typeorm-ts-node-commonjs -d ./src/providers/typeorm/typeorm-migrations.config.ts",
+    "typeorm:config:prod": "typeorm-ts-node-commonjs -d ./dist/providers/typeorm/typeorm-migrations.config.js",
+    "migration:generate": "f() { nest build entities --tsc && pnpm typeorm:config migration:generate ./migrations/$1; }; f",
+    "migration:run": "pnpm typeorm:config migration:run",
+    "migration:run:prod": "pnpm typeorm:config:prod migration:run",
+    "migration:revert": "pnpm typeorm:config migration:revert",
+    "migration:show": "pnpm typeorm:config migration:show",
+    "migration:create": "f() { typeorm-ts-node-commonjs migration:create ./migrations/I$1; }; f",
+    "migration:compile": "tsc -p ./migrations/tsconfig.migration.json",
+    "import:data": "nest build && node dist/data-import/data-import.command.js"
+  },
+  "dependencies": {
+    "@nestjs/cli": "^11.0.10",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/swagger": "^11.2.0",
+    "@nestjs/typeorm": "11.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "csv-parse": "6.1.0",
+    "dotenv": "17.2.3",
+    "express": "5.1.0",
+    "helmet": "8.1.0",
+    "joi": "^18.0.1",
+    "pg": "8.16.3",
+    "pg-copy-streams": "7.0.0",
+    "pnpm": "10.16.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "typeorm": "0.3.27"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.35.0",
+    "@nestjs/schematics": "^11.0.7",
+    "@nestjs/testing": "^11.1.6",
+    "@types/express": "^5.0.3",
+    "@types/jest": "30.0.0",
+    "@types/node": "^24.3.3",
+    "@types/supertest": "6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "jest": "30.2.0",
+    "lint-staged": "16.1.6",
+    "prettier": "^3.6.2",
+    "source-map-support": "^0.5.21",
+    "sqlite3": "5.1.7",
+    "supertest": "7.2.2",
+    "ts-jest": "29.4.6",
+    "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "8.43.0"
+  },
+  "jest": {
+    "rootDir": ".",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/**/*.spec.ts",
+      "!src/**/*.module.ts",
+      "!src/main.ts",
+      "!src/index.ts",
+      "!src/modules/small-llm/quick-test/**"
+    ],
+    "coverageDirectory": "../coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "json-summary"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    "projects": [
+      {
+        "displayName": "unit",
+        "transform": {
+          "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "moduleNameMapper": {
+          "^src/(.*)$": "<rootDir>/src/$1"
+        },
+        "testMatch": [
+          "<rootDir>/src/**/*.spec.ts"
+        ]
+      },
+      {
+        "displayName": "integration",
+        "transform": {
+          "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "moduleNameMapper": {
+          "^src/(.*)$": "<rootDir>/src/$1"
+        },
+        "testMatch": [
+          "<rootDir>/test/integration/**/*.spec.ts"
+        ]
+      },
+      {
+        "displayName": "e2e",
+        "transform": {
+          "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "moduleNameMapper": {
+          "^src/(.*)$": "<rootDir>/src/$1"
+        },
+        "testMatch": [
+          "<rootDir>/test/e2e/**/*.spec.ts"
+        ]
+      }
+    ]
+  }
+}

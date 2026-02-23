@@ -1,0 +1,24 @@
+Dockerfile
+
+# Исключаем зависимости (устанавливаем их в контейнере)
+node_modules/
+dist/
+
+# Игнорируем конфиденциальные данные
+.env
+.env.example
+secrets.json
+
+# Исключаем логи и кеш
+npm-debug.log
+yarn-error.log
+.cache/
+.vscode/
+.idea/
+
+# Не копируем Git-репозиторий в образ
+.git/
+.gitignore
+
+# Исключаем файлы конфигурации husky
+.husky/
